@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Huffman Coding - Theory</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Huffman Coding</h1>
+        <nav>
+            <a href="index.html">Theory</a>
+            <a href="gpt.html">Interactive Tree</a>
+            <a href="complexities.html">Time Complexities</a>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>Theoretical Overview</h2>
+            <p>
+                Huffman Coding is a popular algorithm used for lossless data compression. The primary goal of Huffman Coding is to reduce the total number of bits required to represent a set of characters based on their frequencies.
+            </p>
+            <h3>How It Works</h3>
+            <ol>
+                <li>Calculate the frequency of each character in the input data.</li>
+                <li>Create a leaf node for each character and build a priority queue (min-heap) based on frequency.</li>
+                <li>Extract the two nodes with the smallest frequency from the queue.</li>
+                <li>Create a new internal node with these two nodes as children and with a frequency equal to the sum of the two nodes.</li>
+                <li>Insert the new node back into the priority queue.</li>
+                <li>Repeat steps 3-5 until the queue contains only one node, which becomes the root of the Huffman Tree.</li>
+                <li>Assign binary codes to each character by traversing the tree from the root to the leaves, assigning '0' for left branches and '1' for right branches.</li>
+            </ol>
+            <h3>Properties</h3>
+            <ul>
+                <li>Optimal for prefix codes: No code is a prefix of another.</li>
+                <li>Greedy algorithm: Builds the optimal tree in a bottom-up manner.</li>
+                <li>Efficiency: Particularly effective when character frequencies vary significantly.</li>
+            </ul>
+        </section>
+    </main>
+    <footer>
+        <p>FS AAC Mini Project 2024 - Huffman Coding Website <br> <br>Atharva Dighe | Yashraj Rao</p>
+    </footer>
+</body>
+</html>

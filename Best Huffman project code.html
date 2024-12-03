@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bubble Sort and Huffman Tree Visualization</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background-color: #f4f4f4;
+  }
+  .container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .array-element {
+    width: 50px;
+    height: 50px;
+    margin: 5px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #007bff;
+    color: white;
+    font-size: 20px;
+    border-radius: 5px;
+    transition: background-color 0.3s, transform 0.5s;
+  }
+  .swapping {
+    background-color: #ff5733;
+    transform: scale(1.2); /* Enlarged to show swapping */
+  }
+  .combined-element {
+    background-color: #d4af37;
+    color: black;
+    font-size: 20px;
+    border-radius: 5px; #b8860b;
+  }
+  .step-row {
+    display: flex;
+    justify-content: center;
+    margin: 5px 0;
+  }
+  button, input {
+    margin: 10px;
+    padding: 10px;
+    font-size: 16px;
+  }
+  #treeContainer {
+    margin-top: 20px;
+    overflow-x: auto;
+    width: 100%;
+    height: 500px;
+    color: white;
+  }
+  .line {
+    stroke: #333;
+    stroke-width: 2;
+  }
+</style>
+</head>
+<body>
+
+<h1>Bubble Sort and Huffman Tree Visualization</h1>
+<p>Enter characters and frequencies (e.g., a:5, b:2, c:9) and click "Generate".</p>
+<input type="text" id="inputData" placeholder="Enter characters and frequencies">
+<button onclick="startProcess()">Generate</button>
+
+<h2>Bubble Sort Visualization</h2>
+<div id="sortedArrayContainer" class="container"></div>
+<h2>Final Sorted Array:</h2>
+<div id="finalSortedArrayContainer" class="container"></div>
+<h2>Combination Steps:</h2>
+<div id="combinedArrayContainer"></div>
+<div id="treeContainer">
+  <svg id="svgTree" width="100%" height="100%"></svg>
+</div>
+
+<script>
+  let nodes = [];
+
+  // Parse input and display initial array
+  function parseInput(input) {
+    const pairs = input.split(",");
+    const nodeArray = [];
+    for (let pair of pairs) {
+      const [char, freq] = pair.trim().split(":");
+      if (char && freq) {
+        nodeArray.push({ char: char.trim(), freq: parseInt(freq) });
+      }
+    }
+    displayArray(nodeArray, "sortedArrayContainer");
+    return nodeArray;
+  }
+
+  // Display array in specified container
+  function displayArray(arr, containerId) {
+    const container = document.getElementById(containerId);
+    container.innerHTML = ""; // Clear previous content
+
+    arr.forEach(node => {
+      const element = document.createElement("div");
+      element.classList.add("array-element");
+      element.textContent = `${node.char ? node.char : ''}:${node.freq}`;
+      container.appendChild(element);
+    });
+  }
+
+  // Start the visualization process
+  async function startProcess() {
+    const input = document.getElementById("inputData").value;
+    nodes = parseInput(input);
+    if (nodes) {
+      await bubbleSortNodes(); // Sort the array
+      displayArray(nodes, "finalSortedArrayContainer"); // Display sorted array
+      buildCombinationSteps([...nodes]); // Start Huffman combination steps
+    }
+  }
+
+  // Bubble Sort animation
+  async function bubbleSortNodes() {
+    const elements = document.querySelectorAll("#sortedArrayContainer .array-element");
+    for (let i = 0; i < nodes.length - 1; i++) {
+      for (let j = 0; j < nodes.length - i - 1; j++) {
+        elements[j].classList.add("swapping");
+        elements[j + 1].classList.add("swapping");
+        
+        await new Promise(resolve => setTimeout(resolve, 500));
+
+        if (nodes[j].freq > nodes[j + 1].freq) {
+          // Swap in array
+          [nodes[j], nodes[j + 1]] = [nodes[j + 1], nodes[j]];
+
+          // Update displayed text
+          elements[j].textContent = `${nodes[j].char ? nodes[j].char : ''}:${nodes[j].freq}`;
+          elements[j + 1].textContent = `${nodes[j + 1].char ? nodes[j + 1].char : ''}:${nodes[j + 1].freq}`;
+
+          await new Promise(resolve => setTimeout(resolve, 500));
+        }
+        
+        elements[j].classList.remove("swapping");
+        elements[j + 1].classList.remove("swapping");
+      }
+    }
+  }
+
+  // Combination steps for Huffman tree construction
+  async function buildCombinationSteps(nodes) {
+    const combinedArrayContainer = document.getElementById("combinedArrayContainer");
+    combinedArrayContainer.innerHTML = ""; // Clear previous steps
+
+    while (nodes.length > 1) {
+      const [left, right] = [nodes.shift(), nodes.shift()];
+      const combinedFreq = left.freq + right.freq;
+      const combinedNode = { freq: combinedFreq, left, right, combined: true };
+
+      nodes.push(combinedNode);
+      nodes.sort((a, b) => a.freq - b.freq);
+
+      const stepRow = document.createElement("div");
+      stepRow.classList.add("step-row");
+      combinedArrayContainer.appendChild(stepRow);
+
+      nodes.forEach(node => {
+        const element = document.createElement("div");
+        element.classList.add("array-element");
+        if (node.combined) element.classList.add("combined-element");
+        element.textContent = `${node.char ? node.char : ''}:${node.freq}`;
+        stepRow.appendChild(element);
+      });
+
+      await new Promise(resolve => setTimeout(resolve, 1500)); // Delay for next step
+    }
+
+    drawHuffmanTree(nodes[0]); // Draw Huffman tree
+  }
+
+  // Draw Huffman tree
+  function drawHuffmanTree(root) {
+    const svg = document.getElementById('svgTree');
+    svg.innerHTML = '';
+    drawNode(root, svg.clientWidth / 2, 50, 200, svg);
+  }
+
+  // Recursive function to draw tree nodes
+  function drawNode(node, x, y, spacing, svg) {
+    if (!node) return;
+
+    const shape = document.createElementNS("http://www.w3.org/2000/svg", node.char ? "circle" : "rect");
+    if (node.char) {
+      shape.setAttribute('cx', x);
+      shape.setAttribute('cy', y);
+      shape.setAttribute('r', 20);
+      shape.setAttribute('fill', '#c4f571');
+    } else {
+      shape.setAttribute('x', x - 25);
+      shape.setAttribute('y', y - 20);
+      shape.setAttribute('width', 50);
+      shape.setAttribute('height', 40);
+      shape.setAttribute('fill', '#d4af37');
+    }
+    svg.appendChild(shape);
+
+    const text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute('x', x);
+    text.setAttribute('y', y + 5);
+    text.setAttribute('text-anchor', 'middle');
+    text.textContent = node.char ? `${node.char}:${node.freq}` : node.freq;
+    svg.appendChild(text);
+
+    if (node.left) {
+      drawLine(svg, x, y + 20, x - spacing, y + 100);
+      drawNode(node.left, x - spacing, y + 100, spacing / 2, svg);
+    }
+    if (node.right) {
+      drawLine(svg, x, y + 20, x + spacing, y + 100);
+      drawNode(node.right, x + spacing, y + 100, spacing / 2, svg);
+    }
+  }
+
+  // Draw lines between nodes
+  function drawLine(svg, x1, y1, x2, y2) {
+    const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+    line.setAttribute('x1', x1);
+    line.setAttribute('y1', y1);
+    line.setAttribute('x2', x2);
+    line.setAttribute('y2', y2);
+    line.classList.add('line');
+    svg.appendChild(line);
+  }
+</script>
+
+</body>
+</html>

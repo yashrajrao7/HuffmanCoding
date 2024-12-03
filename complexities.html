@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Huffman Coding - Time Complexities</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>Huffman Coding</h1>
+        <nav>
+            <a href="index.html">Theory</a>
+            <a href="gpt.html">Interactive Tree</a>
+            <a href="complexities.html">Time Complexities</a>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>Time Complexities of Huffman Coding</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Case</th>
+                        <th>Time Complexity</th>
+                        <th>Explanation</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Best Case</td>
+                        <td>O(n log n)</td>
+                        <td>Even in the best case, building the priority queue requires O(n) time, and extracting nodes requires O(n log n) time.</td>
+                    </tr>
+                    <tr>
+                        <td>Average Case</td>
+                        <td>O(n log n)</td>
+                        <td>On average, the algorithm performs a series of insertions and deletions on the priority queue, leading to O(n log n) time.</td>
+                    </tr>
+                    <tr>
+                        <td>Worst Case</td>
+                        <td>O(n log n)</td>
+                        <td>In the worst case, similar to the average case, the priority queue operations dominate the time complexity, resulting in O(n log n) time.</td>
+                    </tr>
+                </tbody>
+            </table>
+            <h3>Space Complexity</h3>
+            <p>The space complexity of Huffman Coding is O(n), where n is the number of unique characters. This space is used to store the frequency table and the Huffman tree.</p>
+            <h3>Detailed Explanation</h3>
+            <p>
+                The primary operations that determine the time complexity of Huffman Coding are the creation and manipulation of the priority queue (min-heap). Building the initial heap takes O(n) time. Each extraction of the two smallest elements and the insertion of their combined node takes O(log n) time, and since there are n-1 such operations, the total time complexity becomes O(n log n). This holds true for the best, average, and worst cases.
+            </p>
+        </section>
+    </main>
+    <footer>
+        <p>FS AAC Mini Project 2024 - Huffman Coding Website <br> <br>Atharva Dighe | Yashraj Rao</p>
+    </footer>
+</body>
+</html>

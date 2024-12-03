@@ -4,56 +4,39 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bubble Sort and Huffman Tree Visualization</title>
-<link rel="stylesheet" href="styles.css">
+<!-- Bootstrap CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
   body {
     font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #f4f4f4;
-  }
-  .container {
-    display: flex;
-    justify-content: center;
-    margin-top: 20px;
+    background-color: #f8f9fa;
   }
   .array-element {
-    width: 50px;
-    height: 50px;
+    width: 60px;
+    height: 60px;
     margin: 5px;
-    display: inline-flex;
+    display: flex;
     align-items: center;
     justify-content: center;
     background-color: #007bff;
     color: white;
-    font-size: 20px;
+    font-size: 18px;
     border-radius: 5px;
     transition: background-color 0.3s, transform 0.5s;
   }
   .swapping {
     background-color: #ff5733;
-    transform: scale(1.2); /* Enlarged to show swapping */
+    transform: scale(1.2);
   }
   .combined-element {
     background-color: #d4af37;
     color: black;
-    font-size: 18px;
-    border: 2px dashed #b8860b;
-  }
-  .step-row {
-    display: flex;
-    justify-content: center;
-    margin: 5px 0;
-  }
-  button, input {
-    margin: 10px;
-    padding: 10px;
     font-size: 16px;
+    border: 2px dashed #b8860b;
   }
   #treeContainer {
     margin-top: 20px;
     overflow-x: auto;
-    width: 100%;
-    height: 500px;
   }
   .line {
     stroke: #333;
@@ -63,30 +46,41 @@
 </head>
 <body>
 
-<header>
-<h1>Huffman Coding</h1>
-<nav>
-            <a href="index.html">Theory</a>
-            <a href="gpt.html">Interactive Tree</a>
-            <a href="complexities.html">Time Complexities</a>
-        </nav>
+<header class="bg-primary text-white text-center py-3">
+  <h1 class="h2">Huffman Coding Visualization</h1>
+  <nav class="d-flex justify-content-center gap-3 mt-2">
+    <a href="index.html" class="text-white text-decoration-none">Theory</a>
+    <a href="gpt.html" class="text-white text-decoration-none">Interactive Tree</a>
+    <a href="complexities.html" class="text-white text-decoration-none">Time Complexities</a>
+  </nav>
 </header>
-<h2> Huffman Tree Visualization </h2>
-<p>Enter characters and frequencies (e.g., a:5, b:2, c:9) and click "Generate".</p>
-<input type="text" id="inputData" placeholder="Enter characters and frequencies">
-<button onclick="startProcess()">Generate</button>
 
-<h3>Bubble Sort Visualization</h3>
-<div id="sortedArrayContainer" class="container"></div>
-<h3>Final Sorted Array:</h3>
-<div id="finalSortedArrayContainer" class="container"></div>
-<h3>Combination Steps:</h3>
-<div id="combinedArrayContainer"></div>
-<div id="treeContainer">
-  <svg id="svgTree" width="100%" height="100%"></svg>
+<div class="container my-4">
+  <h2 class="h4 text-center mb-3">Huffman Tree Visualization</h2>
+  <p class="text-center">Enter characters and frequencies (e.g., a:5, b:2, c:9) and click "Generate".</p>
+  <div class="d-flex justify-content-center mb-4">
+    <input type="text" id="inputData" class="form-control w-50 me-2" placeholder="Enter characters and frequencies">
+    <button class="btn btn-primary" onclick="startProcess()">Generate</button>
+  </div>
+
+  <h3 class="h5 text-center">Bubble Sort Visualization</h3>
+  <div id="sortedArrayContainer" class="d-flex justify-content-center flex-wrap"></div>
+
+  <h3 class="h5 text-center mt-4">Final Sorted Array</h3>
+  <div id="finalSortedArrayContainer" class="d-flex justify-content-center flex-wrap"></div>
+
+  <h3 class="container-fluid align-center h5 text-center mt-4">Combination Steps</h3>
+  <div id="combinedArrayContainer" class="d-flex flex-column align-items-center"></div>
 </div>
 
+<div id="treeContainer" class="container-fluid justify-content-center">
+  <svg id="svgTree" class="sm-justify-content-center" width="100%" height="500px"></svg>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
+  // JavaScript code remains the same as your original script
   let nodes = [];
 
   // Parse input and display initial array
@@ -103,6 +97,17 @@
     return nodeArray;
   }
 
+ // Start the visualization process
+  async function startProcess() {
+    const input = document.getElementById("inputData").value;
+    nodes = parseInput(input);
+    if (nodes) {
+      await bubbleSortNodes(); // Sort the array
+      displayArray(nodes, "finalSortedArrayContainer"); // Display sorted array
+      buildCombinationSteps([...nodes]); // Start Huffman combination steps
+    }
+  }
+
   // Display array in specified container
   function displayArray(arr, containerId) {
     const container = document.getElementById(containerId);
@@ -116,16 +121,6 @@
     });
   }
 
-  // Start the visualization process
-  async function startProcess() {
-    const input = document.getElementById("inputData").value;
-    nodes = parseInput(input);
-    if (nodes) {
-      await bubbleSortNodes(); // Sort the array
-      displayArray(nodes, "finalSortedArrayContainer"); // Display sorted array
-      buildCombinationSteps([...nodes]); // Start Huffman combination steps
-    }
-  }
 
   // Bubble Sort animation
   async function bubbleSortNodes() {
@@ -168,7 +163,7 @@
       nodes.sort((a, b) => a.freq - b.freq);
 
       const stepRow = document.createElement("div");
-      stepRow.classList.add("step-row");
+      stepRow.classList.add("d-flex", "justify-content-center", "flex-wrap", "my-2");
       combinedArrayContainer.appendChild(stepRow);
 
       nodes.forEach(node => {

@@ -1,2 +1,4 @@
-# huffmanWebsite
-Mini Project of FY MSC Sem-1. To build a website using HTML, CSS, JavaScript that shows the working of Huffman Coding using Greedy Strategy. Take I/p from user in form of characters & frequencies, build a tree which showcases huffman codes for respective characters. Also display the time complexities, space complexities in best case, worst case & average case.
+Demonstrate the process of Human Coding using a Greedy Strategy. Accept input from the user in the
+form of characters and their corresponding frequencies, and construct a tree that illustrates the Human
+codes for each character. Additionally, provide an analysis of the time and space complexities for the
+best case, worst case, and average case scenarios
